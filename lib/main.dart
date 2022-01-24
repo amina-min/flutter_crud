@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:untitled/student.dart';
 
 void main() {
   runApp(const MaterialApp(
     home: RegisteationApp(),
   ));
-
 }
 
 class RegisteationApp extends StatefulWidget {
@@ -34,10 +34,14 @@ class RegisteationPage extends StatefulWidget {
 }
 
 class _RegisteationPageState extends State<RegisteationPage> {
-  int gender = 0;
-  var dropdownValues = ['JEE', 'WPSI', '.NET'] ;
+  TextEditingController _nameController = TextEditingController();
+  TextEditingController _mobileController = TextEditingController();
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _addressController = TextEditingController();
+  var _gender ;
+  var dropdownValues = ['JEE', 'WPSI', '.NET'];
 
-  var selectMenuItem ;
+  var selectMenuItem;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -45,23 +49,24 @@ class _RegisteationPageState extends State<RegisteationPage> {
       child: Column(
         children: [
           const Text("Registration Form"),
-         TextFormField(
-           decoration: const InputDecoration(
-             border: UnderlineInputBorder(),
-             labelText: 'Enter your name',
-             icon: Icon(Icons.person),
-           ),
-         ),
-
           TextFormField(
+            controller: _nameController,
+            decoration: const InputDecoration(
+              border: UnderlineInputBorder(),
+              labelText: 'Enter your name',
+              icon: Icon(Icons.person),
+            ),
+          ),
+          TextFormField(
+            controller: _emailController,
             decoration: const InputDecoration(
               border: UnderlineInputBorder(),
               labelText: 'Enter your Email',
               icon: Icon(Icons.email),
             ),
           ),
-
           TextFormField(
+            controller: _mobileController,
             decoration: const InputDecoration(
               border: UnderlineInputBorder(),
               labelText: 'Enter your phone No.',
@@ -70,25 +75,21 @@ class _RegisteationPageState extends State<RegisteationPage> {
           ),
           Row(children: const <Widget>[
             Icon(Icons.person),
-            Text("   Gender :   ",
-                style: TextStyle(fontSize: 15.0)),
+            Text("   Gender :   ", style: TextStyle(fontSize: 15.0)),
             SizedBox(height: 40.0),
           ]),
-
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               Expanded(
                 child: ListTile(
-                  title: const Text(
-                      'Male'
-                  ),
+                  title: const Text('Male'),
                   leading: Radio(
                     value: 0,
-                    groupValue: gender,
+                    groupValue: _gender,
                     onChanged: (value) {
                       setState(() {
-                        gender = 0;
+                        _gender = 0;
                       });
                     },
                   ),
@@ -96,15 +97,13 @@ class _RegisteationPageState extends State<RegisteationPage> {
               ),
               Expanded(
                 child: ListTile(
-                  title: const Text(
-                      'Female'
-                  ),
+                  title: const Text('Female'),
                   leading: Radio(
                     value: 1,
-                    groupValue: gender,
+                    groupValue: _gender,
                     onChanged: (value) {
                       setState(() {
-                        gender = 1;
+                        _gender = 1;
                       });
                     },
                   ),
@@ -112,29 +111,56 @@ class _RegisteationPageState extends State<RegisteationPage> {
               ),
             ],
           ),
+          Container(
+            padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+            child: TextField(
+              controller: _addressController,
+              decoration: const InputDecoration(
+                labelText: 'Address:',
+              ),
+            ),
+          ),
 
 
-
+          Row(children: const <Widget>[
+            Icon(Icons.list_alt),
+            Text("   Cources :   ", style: TextStyle(fontSize: 15.0)),
+            SizedBox(height: 40.0),
+          ]),
 
           DropdownButtonFormField(
-              items: dropdownValues.map((String dropdownValue){
-                return DropdownMenuItem(
-                    value: dropdownValue,
-                    child: Text(dropdownValue));
-              }).toList(),
-              onChanged: (newvalue){
-                setState(() => selectMenuItem = newvalue);
-              },
-              value: selectMenuItem,
+            items: dropdownValues.map((String dropdownValue) {
+              return DropdownMenuItem(
+                  value: dropdownValue, child: Text(dropdownValue));
+            }).toList(),
+            onChanged: (newvalue) {
+              setState(() => selectMenuItem = newvalue);
+            },
+            value: selectMenuItem,
+          ),
 
-              )
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              SizedBox(height: 50.0),
+              ElevatedButton(
+                  onPressed: () {
+                   Student student = Student(
+                       name: _nameController.text,
+                       email: _emailController.text,
+                       mobile: _mobileController.text,
+                       gender: _gender,
+                       courses: selectMenuItem,
+                       address: _addressController.text);
+                  },
+                  child: const Text("Submit"))
+            ],
+          )
+
+
 
         ],
       ),
     );
   }
 }
-
-
-
-
